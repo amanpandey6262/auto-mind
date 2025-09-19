@@ -2,8 +2,12 @@ from flask import Flask, render_template, request, jsonify
 import pickle
 import pandas as pd
 import numpy as np
+import time
 
 app = Flask(__name__)
+
+# Track server start time
+start_time = time.time()
 
 # Load model and data
 try:
@@ -90,6 +94,17 @@ def services():
 @app.route('/contact')
 def contact():
     return render_template('contact.html')
+
+# 🔹 Uptime monitor endpoint
+@app.route('/uptime')
+def uptime():
+    current_time = time.time()
+    uptime_seconds = int(current_time - start_time)
+    return jsonify({
+        'status': 'ok',
+        'message': 'Server is running',
+        'uptime_seconds': uptime_seconds
+    }), 200
 
 if __name__ == '__main__':
     app.run(debug=True)
